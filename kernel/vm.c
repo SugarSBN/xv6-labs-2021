@@ -449,3 +449,18 @@ vmprint(pagetable_t pagetable, uint64 depth){
     }
   }
 }
+
+int vmpgaccess(pagetable_t pagetable, int va){
+  pte_t *pte;
+
+  if(va >= MAXVA)
+    return 0;
+
+  pte = walk(pagetable, va, 0);
+
+  if(*pte & PTE_A){
+    *pte = *pte & (~PTE_A);
+    return 1;
+  }
+  return 0;
+}
