@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-20 10:24:56
+ * @LastEditTime: 2022-03-20 11:16:37
+ * @FilePath: \xv6-labs-2021\kernel\syscall.h
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 // System call numbers
 #define SYS_fork    1
 #define SYS_exit    2
@@ -20,3 +28,4 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
+#define SYS_trace  22

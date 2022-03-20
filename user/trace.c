@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-20 11:15:22
+ * @LastEditTime: 2022-03-20 11:17:18
+ * @FilePath: \xv6-labs-2021\user\trace.c
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 #include "kernel/param.h"
 #include "kernel/types.h"
 #include "kernel/stat.h"
