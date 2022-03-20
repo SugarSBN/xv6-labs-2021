@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-20 10:24:56
+ * @LastEditTime: 2022-03-20 11:44:07
+ * @FilePath: \xv6-labs-2021\kernel\kalloc.c
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 // Physical memory allocator, for user processes,
 // kernel stacks, page-table pages,
 // and pipe buffers. Allocates whole 4096-byte pages.
@@ -79,4 +87,18 @@ kalloc(void)
   if(r)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
+}
+
+uint64 
+free_memory(){
+  struct run *r;
+  uint64 res = 0;
+  acquire(&kmem.lock);
+  r = kmem.freelist;
+  while(r){
+    r = r -> next;
+    res++;
+  }
+  release(&kmem.lock);
+  return res * PGSIZE;
 }

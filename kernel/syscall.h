@@ -1,7 +1,7 @@
 /*
  * @Author: SuBonan
  * @Date: 2022-03-20 10:24:56
- * @LastEditTime: 2022-03-20 11:16:37
+ * @LastEditTime: 2022-03-20 11:35:42
  * @FilePath: \xv6-labs-2021\kernel\syscall.h
  * @Github: https://github.com/SugarSBN
  * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
@@ -29,3 +29,4 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 #define SYS_trace  22
+#define SYS_sysinfo  23
