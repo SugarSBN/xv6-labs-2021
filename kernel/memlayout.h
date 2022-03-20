@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-20 12:46:03
+ * @LastEditTime: 2022-03-20 12:47:27
+ * @FilePath: \xv6-labs-2021\kernel\memlayout.h
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 // Physical memory layout
 
 // qemu -machine virt is set up like this,
