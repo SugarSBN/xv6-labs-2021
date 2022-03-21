@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-20 14:14:20
+ * @LastEditTime: 2022-03-21 10:59:05
+ * @FilePath: \xv6-labs-2021\kernel\sysproc.c
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 #include "types.h"
 #include "riscv.h"
 #include "defs.h"
@@ -70,6 +78,7 @@ sys_sleep(void)
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
+  backtrace();
   return 0;
 }
 
