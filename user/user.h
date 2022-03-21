@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-20 14:14:20
+ * @LastEditTime: 2022-03-21 14:30:44
+ * @FilePath: \xv6-labs-2021\user\user.h
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 struct stat;
 struct rtcdate;
 
@@ -23,6 +31,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int sigalarm(int ticks, void (*handler)());
+int sigreturn(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
