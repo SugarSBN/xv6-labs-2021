@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-30 08:08:14
+ * @LastEditTime: 2022-03-30 10:43:23
+ * @FilePath: \xv6-labs-2021\notxv6\barrier.c
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -30,7 +38,16 @@ barrier()
   // Block until all threads have called barrier() and
   // then increment bstate.round.
   //
-  
+  pthread_mutex_lock(&bstate.barrier_mutex);
+  bstate.nthread += 1;
+  if (bstate.nthread < nthread){
+    pthread_cond_wait(&bstate.barrier_cond, &bstate.barrier_mutex);
+  }else{
+    bstate.nthread = 0;
+    bstate.round += 1;  //You should increment bstate.round each time all threads have reached the barrier
+    pthread_cond_broadcast(&bstate.barrier_cond);
+  }
+  pthread_mutex_unlock(&bstate.barrier_mutex);
 }
 
 static void *
