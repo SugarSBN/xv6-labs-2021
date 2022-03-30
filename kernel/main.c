@@ -1,3 +1,11 @@
+/*
+ * @Author: SuBonan
+ * @Date: 2022-03-20 10:24:56
+ * @LastEditTime: 2022-03-28 10:13:08
+ * @FilePath: \xv6-labs-2021\kernel\main.c
+ * @Github: https://github.com/SugarSBN
+ * これなに、これなに、これない、これなに、これなに、これなに、ねこ！ヾ(*´∀｀*)ﾉ
+ */
 #include "types.h"
 #include "param.h"
 #include "memlayout.h"
@@ -29,7 +37,7 @@ main()
     fileinit();      // file table
     virtio_disk_init(); // emulated hard disk
     userinit();      // first user process
-    __sync_synchronize();
+    __sync_synchronize();   
     started = 1;
   } else {
     while(started == 0)
