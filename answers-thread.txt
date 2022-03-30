@@ -1,0 +1,4 @@
+when two threads try to insert the same key at the same time,
+the hash table will tell both of them that the key is valid
+so one of two threads will insert and overwrite the other one,
+leading to the missing of keys.
