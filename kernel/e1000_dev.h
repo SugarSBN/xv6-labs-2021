@@ -97,7 +97,7 @@
 #define E1000_TXD_STAT_DD    0x00000001 /* Descriptor Done */
 
 // [E1000 3.3.3]
-struct tx_desc
+struct tx_desc // the descriptor format
 {
   uint64 addr;
   uint16 length;
@@ -107,6 +107,26 @@ struct tx_desc
   uint8 css;
   uint16 special;
 };
+// Transmit Descriptor (TDESC) Layout -Legacy Mode:
+// 0 |                                  63 ~ 0 (Buffer Address)                                               |
+// 8 | 63 ~ 48 (Special) | 47 ~ 40 (CSS) | 39 ~ 32 (status) | 31 ~ 42 (cmd) | 23 ~ 16 (cso) | 15 ~ 0 (length) |
+// 8254x_GBe_SDM.pdf section 3.3.3详细说明了这部分的分布格局
+
+// 更详细地，CMD的layout:
+// | 7 (IDE) | 6 (VLE) | 5(DEXT) | 4(RSV) | 3(RS) | 2(IC) | 1 (IFCS) | 0 (EOP) |
+/*
+  我们需要设置的两位：
+  (RS): Report Status
+  When set, the Ethernet controller needs to report the status information. This ability
+  may be used by software that does in-memory checks of the transmit descriptors to
+  determine which ones are done and packets have been buffered in the transmit
+  FIFO. Software does it by looking at the descriptor status byte and checking the
+  Descriptor Done (DD) bit.
+
+  (EOP):End Of Packet
+  When set, indicates the last descriptor making up the packet. One or many
+  descriptors can be used to form a packet.
+*/
 
 /* Receive Descriptor bit definitions [E1000 3.2.3.1] */
 #define E1000_RXD_STAT_DD       0x01    /* Descriptor Done */
