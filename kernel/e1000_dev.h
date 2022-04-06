@@ -115,14 +115,7 @@ struct tx_desc // the descriptor format
 // 更详细地，CMD的layout:
 // | 7 (IDE) | 6 (VLE) | 5(DEXT) | 4(RSV) | 3(RS) | 2(IC) | 1 (IFCS) | 0 (EOP) |
 /*
-  我们需要设置的两位：
-  (RS): Report Status
-  When set, the Ethernet controller needs to report the status information. This ability
-  may be used by software that does in-memory checks of the transmit descriptors to
-  determine which ones are done and packets have been buffered in the transmit
-  FIFO. Software does it by looking at the descriptor status byte and checking the
-  Descriptor Done (DD) bit.
-
+  我们只需要设置这一位：
   (EOP):End Of Packet
   When set, indicates the last descriptor making up the packet. One or many
   descriptors can be used to form a packet.
