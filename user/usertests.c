@@ -579,15 +579,14 @@ writebig(char *s)
     printf("%s: error: creat big failed!\n", s);
     exit(1);
   }
-
-  for(i = 0; i < MAXFILE; i++){
+  for(i = 0; i < (NDIRECT + NINDIRECT)/*MAXFILE*/; i++){  // 由于之前的large file扩展了MAXFILE，如果不注释掉会跑特别特别特别久
     ((int*)buf)[0] = i;
     if(write(fd, buf, BSIZE) != BSIZE){
       printf("%s: error: write big file failed\n", s, i);
       exit(1);
     }
   }
-
+  
   close(fd);
 
   fd = open("big", O_RDONLY);
