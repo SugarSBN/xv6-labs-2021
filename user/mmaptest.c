@@ -287,7 +287,6 @@ fork_test(void)
     printf("fork_test failed\n");
     exit(1);
   }
-
   // check that the parent's mappings are still there.
   _v1(p1);
   _v1(p2);

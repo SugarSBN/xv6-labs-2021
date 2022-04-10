@@ -70,19 +70,24 @@ usertrap(void)
   } else if (r_scause() == 13 || r_scause() == 15){ // 根据手册，13是load引起的page fault，15是store引起的page fault 
     uint64 va = r_stval();
     va = PGROUNDDOWN(va);
-    pte_t *pte = walk(p -> pagetable, va, 0);
-    printf("%p %d\n", va, *pte & PTE_M);
-    if ((*pte) & PTE_M){
-      if (vma_pagefault_handler(va) == -1) {
-        printf("            VMA page fault handler error!\n");
+    if (va > MAXVA - 3 * PGSIZE || va < MAXVA - (p -> npages) * PGSIZE){
+      printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
+      printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
+      p -> killed = 1;
+    }else{
+      pte_t *pte = walk(p -> pagetable, va, 0);
+      if ((*pte) & PTE_M){
+        if (vma_pagefault_handler(va) == -1) {
+          printf("            VMA page fault handler error!\n");
+          printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
+          printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
+          p->killed = 1;
+        }
+      } else {
         printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
         printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
         p->killed = 1;
       }
-    } else {
-      printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
-      printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
-      p->killed = 1;
     }
   } else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);

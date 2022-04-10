@@ -297,6 +297,12 @@ fork(void)
   // Cause fork to return 0 in the child.
   np->trapframe->a0 = 0;
 
+  np -> npages = p -> npages;
+  for (int i = 0;i < 100;i++) np -> vmas[i] = p -> vmas[i];
+  for (int i = 3;i < p -> npages;i++){
+    pte_t *pte = walk(np -> pagetable, MAXVA - i * PGSIZE, 0);
+    *pte |= PTE_M;
+  }
   // increment reference counts on open file descriptors.
   for(i = 0; i < NOFILE; i++)
     if(p->ofile[i])
@@ -355,6 +361,7 @@ exit(int status)
     }
   }
 
+  for (int i = 0;i < 100;i++) p -> vmas[i].vm_valid = 1;
   begin_op();
   iput(p->cwd);
   end_op();

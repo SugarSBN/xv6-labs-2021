@@ -518,7 +518,6 @@ sys_mmap(void){
     vma->vm_start = vm_start;
     vma->vm_file->ref++;
     p -> npages += (vm_end - vm_start) / PGSIZE + 1;
-    printf("mmap: %p %p\n", vm_start, vm_end);
     for (uint64 i = vm_start;i <= vm_end;i += PGSIZE){
       pte_t *pte = walk(p -> pagetable, i, 0);
       *pte |= PTE_M;
