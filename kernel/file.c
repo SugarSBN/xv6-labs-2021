@@ -12,6 +12,7 @@
 #include "file.h"
 #include "stat.h"
 #include "proc.h"
+#include "fcntl.h"
 
 struct devsw devsw[NDEV];
 struct {
@@ -180,3 +181,31 @@ filewrite(struct file *f, uint64 addr, int n)
   return ret;
 }
 
+int 
+vma_pagefault_handler(uint64 va){
+  struct proc *p = myproc();
+  struct VMA *vma = 0;
+  for (int i = 0;i < 100;i++) if (p -> vmas[i].vm_start <= va && p -> vmas[i].vm_end >= va){
+    vma = &p -> vmas[i];
+    break;
+  }
+  if (vma){
+    char *mem = kalloc();
+    memset(mem, 0, PGSIZE);
+    uint64 flags = PTE_U | PTE_X | PTE_M;
+    if (vma -> vm_prot & PROT_READ) flags |= PTE_R;
+    if (vma -> vm_prot & PROT_WRITE) flags |= PTE_W;
+    if(mappages(p->pagetable, va, PGSIZE, (uint64)mem, flags) < 0){
+      kfree(mem);
+      p->killed = 1;
+      return -1;
+    }
+    struct file* f = vma -> vm_file;
+    uint64 offset = va - (vma -> vm_start);
+    ilock(f -> ip);
+    readi(f -> ip, 0, (uint64)mem, offset, PGSIZE);
+    iunlock(f -> ip);
+  } else return -1;
+
+  return 0;
+}

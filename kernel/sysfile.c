@@ -484,3 +484,66 @@ sys_pipe(void)
   }
   return 0;
 }
+
+uint64
+sys_mmap(void){ 
+  int length;
+  int prot;
+  int flags;
+  int fd;
+  if (argint(1, &length) < 0 
+    || argint(2, &prot) < 0 
+    || argint(3, &flags) < 0 
+    || argint(4, &fd) < 0)
+    return -1;
+  struct proc *p = myproc();
+  struct file *f = p -> ofile[fd];
+
+  if(!f->writable && (prot & PROT_WRITE) && (flags & MAP_SHARED))  return -1;
+  
+  struct VMA *vma = 0;
+  for (int i = 0;i < 100;i++)  if (p -> vmas[i].vm_valid){
+    vma = &p -> vmas[i];
+    break;
+  }
+  if (vma){
+    uint64 vm_end = PGROUNDDOWN(MAXVA - 1 - (p -> npages) * PGSIZE);
+    uint64 vm_start = PGROUNDDOWN(MAXVA - 1 - (p -> npages) * PGSIZE - length + 1);
+    vma -> vm_valid = 0;
+    vma->vm_fd = fd;
+    vma->vm_file = f;
+    vma->vm_flags = flags;
+    vma->vm_prot = prot;
+    vma->vm_end = vm_end;
+    vma->vm_start = vm_start;
+    vma->vm_file->ref++;
+    p -> npages += (vm_end - vm_start) / PGSIZE + 1;
+    printf("mmap: %p %p\n", vm_start, vm_end);
+    for (uint64 i = vm_start;i <= vm_end;i += PGSIZE){
+      pte_t *pte = walk(p -> pagetable, i, 0);
+      *pte |= PTE_M;
+    }
+  } else return -1; 
+
+  return vma -> vm_start;
+}
+
+uint64
+sys_munmap(void){
+  uint64 addr;
+  int length;
+  if (argaddr(0, &addr) < 0 || argint(1, &length) < 0)
+    return -1;
+  struct proc *p = myproc();
+  //printf("unmap: %p pid=%d\n", addr, p -> pid);
+  for (int i = 0;i < 100;i++) if (p -> vmas[i].vm_start <= addr && addr <= p -> vmas[i].vm_end) {
+    struct VMA *vma = &p -> vmas[i];
+    if (walkaddr(p->pagetable, vma->vm_start)){
+      if(vma->vm_flags == MAP_SHARED) filewrite(vma->vm_file, vma->vm_start, length);
+      uvmunmap(p->pagetable, vma->vm_start, length / PGSIZE ,1);
+    }
+    vma -> vm_valid = 1;
+    vma -> vm_file -> ref --;
+  }
+  return 0;
+}

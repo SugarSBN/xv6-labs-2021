@@ -80,6 +80,16 @@ struct trapframe {
   /* 280 */ uint64 t6;
 };
 
+struct VMA{
+  int vm_valid;   
+  uint64 vm_start; 
+  uint64 vm_end; 
+  int vm_flags;
+  int vm_prot; 
+  struct file* vm_file;
+  int vm_fd;
+};
+
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state
@@ -90,7 +100,8 @@ struct proc {
   enum procstate state;        // Process state
   void *chan;                  // If non-zero, sleeping on chan
   int killed;                  // If non-zero, have been killed
-  int xstate;                  // Exit status to be returned to parent's wait
+  int xstate;      
+              // Exit status to be returned to parent's wait
   int pid;                     // Process ID
 
   // wait_lock must be held when using this:
@@ -105,4 +116,6 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  struct VMA vmas[100];
+  int npages;
 };

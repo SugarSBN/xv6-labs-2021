@@ -135,6 +135,8 @@ found:
     return 0;
   }
 
+  p -> npages = 3;
+  for (int i = 0;i < 100;i++) p -> vmas[i].vm_valid = 1;
   // Set up new context to start executing at forkret,
   // which returns to user space.
   memset(&p->context, 0, sizeof(p->context));
